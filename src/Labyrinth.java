@@ -1,5 +1,4 @@
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Labyrinth implements Serializable {
@@ -29,11 +28,11 @@ public class Labyrinth implements Serializable {
 
         for (int i=0; i<h; i++) {
             this.maze[i][0] = 0;
-            this.maze[i][h-1] = 0;
+            this.maze[i][w-1] = 0;
         }
         for (int i=0; i<w; i++) {
             this.maze[0][i] = 0;
-            this.maze[w-1][i] = 0;
+            this.maze[h-1][i] = 0;
         }
     }
 
@@ -44,7 +43,7 @@ public class Labyrinth implements Serializable {
         for (int i=0; i<h; i++) {
             for (int j = 0; j < w; j++) {
                 Random r = new Random();
-                maze[i][j] = r.nextInt((1 - 0) + 1) + 0;
+                maze[i][j] = r.nextInt(2);
             }
         }
 
@@ -90,12 +89,12 @@ public class Labyrinth implements Serializable {
                         s+="┐";
                     } else if ((W+N) == 0) {
                         s+="┘";
-                    } else if ((N+S) == 0) {
+                    } else if ((N+S) == 0 || N==0 || S==0) {
                         s+="│";
-                    } else if ((E+W) == 0) {
+                    } else if ((E+W) == 0 || E==0 || W==0) {
                         s+="─";
                     } else {
-                        System.out.println("Not contemplated case at toString():\n"+" "+N+"\n"+W+"0"+E+"\n "+S);
+                        s+="·";
                     }
                 }
             }
@@ -113,7 +112,7 @@ public class Labyrinth implements Serializable {
             for (int j=0; j<w; j++) {
                 System.out.print(maze[i][j]);
             }
-            System.out.println("");
+            System.out.println();
         }
         return s;
     }
