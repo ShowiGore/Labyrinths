@@ -3,12 +3,32 @@ import java.util.Random;
 
 public class Labyrinth implements Serializable {
 
-    int[][] maze;
+    protected int[][] maze;
+    protected Random r = new Random();
+    protected long seed;
 
     Labyrinth (int height, int width) {
+        this.seed = r.nextLong();
+        this.r.setSeed(seed);
         this.maze = new int[height*2+1][width*2+1];
         buildInterior();
         buildBorder();
+    }
+
+    Labyrinth (int height, int width, Long seed) {
+        this.seed = seed;
+        this.r.setSeed(seed);
+        this.maze = new int[height*2+1][width*2+1];
+        buildInterior();
+        buildBorder();
+    }
+
+    public Long getSeed() {
+        return this.seed;
+    }
+
+    public void setSeed(Long seed) {
+        this.seed = seed;
     }
 
     private void buildInterior() {
@@ -30,9 +50,9 @@ public class Labyrinth implements Serializable {
             this.maze[i][0] = 0;
             this.maze[i][w-1] = 0;
         }
-        for (int i=0; i<w; i++) {
-            this.maze[0][i] = 0;
-            this.maze[h-1][i] = 0;
+        for (int j=0; j<w; j++) {
+            this.maze[0][j] = 0;
+            this.maze[h-1][j] = 0;
         }
     }
 
@@ -42,7 +62,6 @@ public class Labyrinth implements Serializable {
 
         for (int i=0; i<h; i++) {
             for (int j = 0; j < w; j++) {
-                Random r = new Random();
                 maze[i][j] = r.nextInt(2);
             }
         }
@@ -110,7 +129,11 @@ public class Labyrinth implements Serializable {
 
         for (int i=0; i<h; i++) {
             for (int j=0; j<w; j++) {
-                System.out.print(maze[i][j]);
+                if (maze[i][j] == 0) {
+                    System.out.print("▓");
+                } else {
+                    System.out.print(" ");
+                }
             }
             System.out.println();
         }

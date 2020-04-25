@@ -1,14 +1,21 @@
+import java.util.Random;
+
 public class main {
 
     public static void main (String [ ] args) {
 
-        Labyrinth l = new Labyrinth(10,40);
+        Labyrinth l1 = new RecursiveDivision(10,70);
 
-        l.randomizeInside();
+        System.out.println(l1.toString());
 
-        System.out.println(l.toString());
+        System.out.println(l1.getSeed());
 
-        l.printMatrix();
+        Labyrinth l2 = new RecursiveDivision(10, 70, l1.getSeed());
+
+        System.out.println(l2.toString());
+
+        System.out.println(l2.getSeed());
+
     }
 
 }
