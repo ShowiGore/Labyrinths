@@ -97,22 +97,4 @@ public class RecursiveDivision extends Labyrinth{
         return r.nextInt((max - min) + 1) + min;
     }
 
-    private int randomEven (int min, int max) {
-        while (true) {
-            int r = randomInRange (min, max);
-            if (r%2 == 0) {
-                return r;
-            }
-        }
-    }
-
-    private int randomOdd (int min, int max) {
-        while (true) {
-            int r = randomInRange (min, max);
-            if (r%2 != 0) {
-                return r;
-            }
-        }
-    }
-
 }

@@ -67,6 +67,18 @@ public class Labyrinth implements Serializable {
         }
     }
 
+    protected int randomEven (int min, int max) {
+        if (max % 2 != 0) --max;
+        if (min % 2 != 0) ++min;
+        return min + 2 * (r.nextInt((max-min)/2+1));
+    }
+
+    protected int randomOdd (int min, int max) {
+        if (max % 2 == 0) --max;
+        if (min % 2 == 0) ++min;
+        return min + 2 * (r.nextInt((max-min)/2+1));
+    }
+
     public String toString() {
         int h = maze.length;
         int w = maze[0].length;
