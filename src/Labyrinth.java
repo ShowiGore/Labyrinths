@@ -31,6 +31,10 @@ public class Labyrinth implements Serializable {
         this.seed = seed;
     }
 
+    public int[][] getMaze() {
+        return this.maze;
+    }
+
     private void buildInterior() {
         int h = maze.length;
         int w = maze[0].length;
@@ -74,14 +78,14 @@ public class Labyrinth implements Serializable {
         int h = maze.length;
         int w = maze[0].length;
 
-        String s = "";
+        StringBuilder s = new StringBuilder();
+        s.append("\n");
 
         for (int i=0; i<h; i++) {
-            s+="\n";
             for (int j=0; j<w; j++) {
 
                 if (maze[i][j] == 1){//path
-                    s+=" ";
+                    s.append(" ");
                 } else {
                     int N, E, S, W;
 
@@ -91,34 +95,117 @@ public class Labyrinth implements Serializable {
                     E = (j==w-1) ? 1 : maze[i][j+1];
 
                     if((N+E+S+W) == 0) {
-                        s += "┼";
+                        s.append("┼");
                     } else if((N+E+S) == 0) {
-                        s+="├";
+                        s.append("├");
                     } else if((E+S+W) == 0) {
-                        s+="┬";
+                        s.append("┬");
                     } else if((S+W+N) == 0) {
-                        s+="┤";
+                        s.append("┤");
                     } else if((W+N+E) == 0) {
-                        s+="┴";
+                        s.append("┴");
                     } else if ((N+E) == 0) {
-                        s+="└";
+                        s.append("└");
                     } else if ((E+S) == 0) {
-                        s+="┌";
+                        s.append("┌");
                     } else if ((S+W) == 0) {
-                        s+="┐";
+                        s.append("┐");
                     } else if ((W+N) == 0) {
-                        s+="┘";
+                        s.append("┘");
                     } else if ((N+S) == 0 || N==0 || S==0) {
-                        s+="│";
+                        s.append("│");
                     } else if ((E+W) == 0 || E==0 || W==0) {
-                        s+="─";
+                        s.append("─");
                     } else {
-                        s+="·";
+                        s.append("·");
                     }
                 }
             }
+            s.append("\n");
         }
-        return s;
+        return s.toString();
+    }
+
+    public String toString2() {
+        int h = maze.length;
+        int w = maze[0].length;
+
+        StringBuilder s = new StringBuilder();
+
+        for (int i=0; i<h; i++) {
+            StringBuilder s1 = new StringBuilder();
+            StringBuilder s2 = new StringBuilder();
+            StringBuilder s3 = new StringBuilder();
+            for (int j=0; j<w; j++) {
+
+                if (maze[i][j] == 1){//path
+                    s1.append("   ");
+                    s2.append("   ");
+                    s3.append("   ");
+                } else {
+                    int N, E, S, W;
+
+                    N = (i==0) ? 1 : maze[i-1][j];
+                    S = (i==h-1) ? 1 : maze[i+1][j];
+                    W = (j==0) ? 1 : maze[i][j-1];
+                    E = (j==w-1) ? 1 : maze[i][j+1];
+
+                    if((N+E+S+W) == 0) {
+                        s1.append(" │ ");
+                        s2.append("─┼─");
+                        s3.append(" │ ");
+                    } else if((N+E+S) == 0) {
+                        s1.append(" │ ");
+                        s2.append(" ├─");
+                        s3.append(" │ ");
+                    } else if((E+S+W) == 0) {
+                        s1.append("   ");
+                        s2.append("─┬─");
+                        s3.append(" │ ");
+                    } else if((S+W+N) == 0) {
+                        s1.append(" │ ");
+                        s2.append("─┤ ");
+                        s3.append(" │ ");
+                    } else if((W+N+E) == 0) {
+                        s1.append(" │ ");
+                        s2.append("─┴─");
+                        s3.append("   ");
+                    } else if ((N+E) == 0) {
+                        s1.append(" │ ");
+                        s2.append(" └─");
+                        s3.append("   ");
+                    } else if ((E+S) == 0) {
+                        s1.append("   ");
+                        s2.append(" ┌─");
+                        s3.append(" │ ");
+                    } else if ((S+W) == 0) {
+                        s1.append("   ");
+                        s2.append("─┐ ");
+                        s3.append(" │ ");
+                    } else if ((W+N) == 0) {
+                        s1.append(" │ ");
+                        s2.append("─┘ ");
+                        s3.append("   ");
+                    } else if ((N+S) == 0 || N==0 || S==0) {
+                        s1.append(" │ ");
+                        s2.append(" │ ");
+                        s3.append(" │ ");
+                    } else if ((E+W) == 0 || E==0 || W==0) {
+                        s1.append("   ");
+                        s2.append("───");
+                        s3.append("   ");
+                    } else {
+                        s1.append("┌─┐");
+                        s2.append("│·│");
+                        s3.append("└─┘");
+                    }
+                }
+            }
+            s.append(s1.toString()+"\n");
+            s.append(s2.toString()+"\n");
+            s.append(s3.toString()+"\n");
+        }
+        return s.toString();
     }
 
     public String printMatrix() {
