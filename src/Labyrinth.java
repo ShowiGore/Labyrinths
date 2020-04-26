@@ -1,5 +1,12 @@
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Random;
+
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 public class Labyrinth implements Serializable {
 
@@ -58,20 +65,6 @@ public class Labyrinth implements Serializable {
             this.maze[0][j] = 0;
             this.maze[h-1][j] = 0;
         }
-    }
-
-    public void randomizeInside(){
-        int h = maze.length;
-        int w = maze[0].length;
-
-        for (int i=0; i<h; i++) {
-            for (int j = 0; j < w; j++) {
-                maze[i][j] = r.nextInt(2);
-            }
-        }
-
-        buildBorder();
-
     }
 
     public String toString() {
@@ -201,11 +194,46 @@ public class Labyrinth implements Serializable {
                     }
                 }
             }
-            s.append(s1.toString()+"\n");
-            s.append(s2.toString()+"\n");
-            s.append(s3.toString()+"\n");
+            s.append(s1.toString()).append("\n");
+            s.append(s2.toString()).append("\n");
+            s.append(s3.toString()).append("\n");
         }
         return s.toString();
+    }
+
+    public void PNG() {
+        int h = maze.length;
+        int w = maze[0].length;
+
+        BufferedImage image = new BufferedImage(h,w,TYPE_INT_RGB);
+
+        Color black = new Color(0,0,0);
+        Color white = new Color(255,255,255);
+        Color unknown = new Color(128,128,128);
+
+        for(int i=0; i<maze.length; i++) {
+            for(int j=0; j<maze[0].length; j++) {
+
+                int p = maze[i][j];
+
+                if (p == 0) {
+                    image.setRGB(j,i,black.getRGB());
+                } else if (p == 1) {
+                    image.setRGB(j,i,white.getRGB());
+                } else {
+                    image.setRGB(j,i,unknown.getRGB());
+                }
+
+            }
+        }
+
+        File output = new File("Maze.jpg");
+
+        try {
+            ImageIO.write(image, "png", output);
+        } catch(Exception e) {
+            System.out.println(e.toString());
+        }
     }
 
     public String printMatrix() {
