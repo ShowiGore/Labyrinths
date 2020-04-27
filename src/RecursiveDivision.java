@@ -5,15 +5,11 @@ public class RecursiveDivision extends Labyrinth{
     RecursiveDivision(int height, int width) {
         super(height, width);
         generator();
-        maze[0][randomOdd(0,maze.length-1)] = 1;
-        maze[maze.length-1][randomOdd(0,maze[0].length-1)] = 1;
     }
 
     RecursiveDivision(int height, int width, Long seed) {
         super(height, width, seed);
         generator();
-        maze[0][randomOdd(0,maze.length-1)] = 1;
-        maze[maze.length-1][randomOdd(0,maze[0].length-1)] = 1;
     }
 
     private void generator() {

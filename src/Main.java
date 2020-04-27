@@ -5,13 +5,18 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Labyrinth l1 = new RecursiveDivision(10, 60);      //(3,3,-462L)
+        Labyrinth l1 = new RecursiveDivision(80, 80);      //(3,3,-462L)
         System.out.println("Seed: " + l1.getSeed());
 
-        System.out.println(l1.toString());
-        //System.out.println(l1.toString2());
+        l1.PNG("unsolved");
 
-        //l1.PNG();
+        l1.minPath();
+
+        l1.PNG("solved");
+
+
+        //System.out.println(l1.toString());
+        //System.out.println(l1.toString2())
 
 
     }

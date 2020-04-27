@@ -2,8 +2,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.Random;
 
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
@@ -13,6 +13,8 @@ public class Labyrinth implements Serializable {
     protected int[][] maze;
     protected Random r = new Random();
     protected long seed;
+    protected Coordinates start;
+    protected Coordinates end;
 
     Labyrinth (int height, int width) {
         this.seed = r.nextLong();
@@ -20,6 +22,7 @@ public class Labyrinth implements Serializable {
         this.maze = new int[height*2+1][width*2+1];
         buildInterior();
         buildBorder();
+        buildStartEnd();
     }
 
     Labyrinth (int height, int width, Long seed) {
@@ -28,6 +31,7 @@ public class Labyrinth implements Serializable {
         this.maze = new int[height*2+1][width*2+1];
         buildInterior();
         buildBorder();
+        buildStartEnd();
     }
 
     public Long getSeed() {
@@ -65,6 +69,14 @@ public class Labyrinth implements Serializable {
             this.maze[0][j] = 0;
             this.maze[h-1][j] = 0;
         }
+    }
+
+    private void buildStartEnd() {
+        this.start = new Coordinates(0, randomOdd(0,maze.length-1));
+        this.end = new Coordinates(maze.length-1, randomOdd(0,maze[0].length-1));
+
+        maze[start.getI()][start.getJ()] = 1;
+        maze[end.getI()][end.getJ()] = 1;
     }
 
     protected int randomEven (int min, int max) {
@@ -213,15 +225,17 @@ public class Labyrinth implements Serializable {
         return s.toString();
     }
 
-    public void PNG() {
+    public void PNG(String name) {
         int h = maze.length;
         int w = maze[0].length;
 
-        BufferedImage image = new BufferedImage(h,w,TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(w,h,TYPE_INT_RGB);
 
         Color black = new Color(0,0,0);
         Color white = new Color(255,255,255);
         Color unknown = new Color(128,128,128);
+        Color visited = new Color(200,200,200);
+        Color solution = new Color(128,0,128);
 
         for(int i=0; i<maze.length; i++) {
             for(int j=0; j<maze[0].length; j++) {
@@ -232,20 +246,69 @@ public class Labyrinth implements Serializable {
                     image.setRGB(j,i,black.getRGB());
                 } else if (p == 1) {
                     image.setRGB(j,i,white.getRGB());
-                } else {
+                } else if (p == 2) {
+                    image.setRGB(j,i,visited.getRGB());
+                } else if (p == 3) {
+                    image.setRGB(j,i,solution.getRGB());
+                }  else {
                     image.setRGB(j,i,unknown.getRGB());
                 }
 
             }
         }
 
-        File output = new File("Maze.jpg");
+        File output = new File(name+".png");
 
         try {
             ImageIO.write(image, "png", output);
         } catch(Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    public void minPath() {
+        minPath(this.start, this.end);
+    }
+
+    private boolean minPath(Coordinates actual, Coordinates end) {
+        boolean pathToEnd = false;
+
+        int i = actual.getI();
+        int j = actual.getJ();
+
+        if (!valid(actual)) {
+            return false;
+        }
+
+        if (actual.equals(end)) {
+            maze[i][j] = 3;         //path to end
+            return true;
+        }
+
+        //actual visited
+        maze[i][j] = 2;
+
+        pathToEnd = pathToEnd || minPath(new Coordinates(i+1, j), end);  //N
+        pathToEnd = pathToEnd || minPath(new Coordinates(i, j+1), end);  //E
+        pathToEnd = pathToEnd || minPath(new Coordinates(i-1, j), end);  //S
+        pathToEnd = pathToEnd || minPath(new Coordinates(i, j-1), end);  //W
+
+        if (pathToEnd) {
+            maze[i][j] = 3;     //path to end
+        }
+
+        return pathToEnd;
+    }
+
+    private boolean valid(Coordinates c) {
+        int i = c.getI();
+        int j = c.getJ();
+
+        if (i<0 || j<0 || i>=maze.length || j>= maze[0].length || maze[i][j]!=1) {
+            return false;
+        }
+
+        return true;
     }
 
     public String printMatrix() {
