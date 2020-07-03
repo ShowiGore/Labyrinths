@@ -1,137 +1,106 @@
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.BitSet;
 import java.util.Random;
-
-import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 public class Labyrinth implements Serializable {
 
-    protected int[][] maze;
-    protected Random r = new Random();
-    protected long seed;
-    protected Coordinates start;
-    protected Coordinates end;
+    final Boolean PATH = false;
+    final Boolean WALL = true;
 
-    Labyrinth (int height, int width) {
-        this.seed = r.nextLong();
-        this.r.setSeed(seed);
-        this.maze = new int[height*2+1][width*2+1];
+    protected BitSet[] maze;
+    protected int height;
+    protected int width;
+    protected Random random = new Random();
+    protected long seed;
+
+    Labyrinth(int height, int width) {
+        this.seed = random.nextLong();
+        this.random.setSeed(seed);
+        this.height = height*2+1;
+        this.width = width*2+1;
+        build();
+    }
+
+    Labyrinth(int height, int width, Long seed) {
+        this.seed = seed;
+        this.random.setSeed(seed);
+        this.height = height*2+1;
+        this.width = width*2+1;
+        build();
+    }
+
+    protected void build() {
         buildInterior();
         buildBorder();
         buildStartEnd();
     }
 
-    Labyrinth (int height, int width, Long seed) {
-        this.seed = seed;
-        this.r.setSeed(seed);
-        this.maze = new int[height*2+1][width*2+1];
-        buildInterior();
-        buildBorder();
-        buildStartEnd();
+    protected void buildInterior() {
+        this.maze = new BitSet[this.height];
+        for (int i=0; i<this.height; i++ ) {
+            this.maze[i] = new BitSet(this.width);
+        }
+    }
+
+    private void buildBorder() {
+        for (int i=0; i<this.height; i++) {
+            this.maze[i].set(0, WALL);
+            this.maze[i].set(this.width-1, WALL);
+        }
+        for (int j=0; j<this.width; j++) {
+            this.maze[0].set(j, WALL);
+            this.maze[this.height-1].set(j, WALL);
+        }
+    }
+
+    private void buildStartEnd() {
+        this.maze[0].set(randomOdd(0,this.height-1), PATH);  //start
+        this.maze[this.height-1].set(randomOdd(0,this.width-1), PATH);  //end
     }
 
     public Long getSeed() {
         return this.seed;
     }
 
-    public void setSeed(Long seed) {
-        this.seed = seed;
-    }
-
-    public int[][] getMaze() {
-        return this.maze;
-    }
-
-    private void buildInterior() {
-        int h = maze.length;
-        int w = maze[0].length;
-
-        for (int i=0; i<h; i++) {
-            for (int j = 0; j < w; j++) {
-                maze[i][j] = 1;
-            }
-        }
-    }
-
-    private void buildBorder() {
-        int h = maze.length;
-        int w = maze[0].length;
-
-        for (int i=0; i<h; i++) {
-            this.maze[i][0] = 0;
-            this.maze[i][w-1] = 0;
-        }
-        for (int j=0; j<w; j++) {
-            this.maze[0][j] = 0;
-            this.maze[h-1][j] = 0;
-        }
-    }
-
-    private void buildStartEnd() {
-        this.start = new Coordinates(0, randomOdd(0,maze.length-1));
-        this.end = new Coordinates(maze.length-1, randomOdd(0,maze[0].length-1));
-
-        maze[start.getI()][start.getJ()] = 1;
-        maze[end.getI()][end.getJ()] = 1;
-    }
-
-    protected int randomEven (int min, int max) {
-        if (max % 2 != 0) --max;
-        if (min % 2 != 0) ++min;
-        return min + 2 * (r.nextInt((max-min)/2+1));
-    }
-
-    protected int randomOdd (int min, int max) {
-        if (max % 2 == 0) --max;
-        if (min % 2 == 0) ++min;
-        return min + 2 * (r.nextInt((max-min)/2+1));
-    }
-
     public String toString() {
-        int h = maze.length;
-        int w = maze[0].length;
 
         StringBuilder s = new StringBuilder();
         s.append("\n");
 
-        for (int i=0; i<h; i++) {
-            for (int j=0; j<w; j++) {
+        for (int i=0; i<this.height; i++) {
+            for (int j=0; j<this.width; j++) {
 
-                if (maze[i][j] == 1){//path
+                if (maze[i].get(j) == PATH){
                     s.append(" ");
                 } else {
-                    int N, E, S, W;
+                    Boolean N, E, S, W;
 
-                    N = (i==0) ? 1 : maze[i-1][j];
-                    S = (i==h-1) ? 1 : maze[i+1][j];
-                    W = (j==0) ? 1 : maze[i][j-1];
-                    E = (j==w-1) ? 1 : maze[i][j+1];
+                    N = (i==0) ? PATH : maze[i-1].get(j);
+                    S = (i==this.height-1) ? PATH : maze[i+1].get(j);
+                    W = (j==0) ? PATH : maze[i].get(j-1);
+                    E = (j==this.width-1) ? PATH : maze[i].get(j+1);
 
-                    if((N+E+S+W) == 0) {
+                    if((N && E && S && W && WALL) || (!N && !E && !S && !W && !WALL)) {
                         s.append("┼");
-                    } else if((N+E+S) == 0) {
+                    } else if((N && E && S && WALL) || (!N && !E && !S && !WALL)) {
                         s.append("├");
-                    } else if((E+S+W) == 0) {
+                    } else if((E && S && W && WALL) || (!E && !S && !W && !WALL)) {
                         s.append("┬");
-                    } else if((S+W+N) == 0) {
+                    } else if((S && W && N && WALL) || (!S && !W && !N && !WALL)) {
                         s.append("┤");
-                    } else if((W+N+E) == 0) {
+                    } else if((W && N && E && WALL) || (!W && !N && !E && !WALL)) {
                         s.append("┴");
-                    } else if ((N+E) == 0) {
+                    } else if ((N && E && WALL) || (!N && !E && !WALL)) {
                         s.append("└");
-                    } else if ((E+S) == 0) {
+                    } else if ((E && S && WALL) || (!E && !S && !WALL)){
                         s.append("┌");
-                    } else if ((S+W) == 0) {
+                    } else if ((S && W && WALL) || (!S && !W && !WALL)) {
                         s.append("┐");
-                    } else if ((W+N) == 0) {
+                    } else if ((W && N && WALL) || (!W && !N && !WALL)) {
                         s.append("┘");
-                    } else if ((N+S) == 0 || N==0 || S==0) {
+                    } else if ((N && S && WALL) || (!N && !S && !WALL) || N==WALL || S==WALL) {
                         s.append("│");
-                    } else if ((E+W) == 0 || E==0 || W==0) {
+                    } else if ((E && W && WALL) || (!E && !W && !WALL) || E==WALL || W==WALL) {
                         s.append("─");
                     } else {
                         s.append("·");
@@ -140,76 +109,99 @@ public class Labyrinth implements Serializable {
             }
             s.append("\n");
         }
+
         return s.toString();
+
     }
 
-    public String toString2() {
-        int h = maze.length;
-        int w = maze[0].length;
+    public String toStringAccurate() {
 
         StringBuilder s = new StringBuilder();
+        s.append("\n");
 
-        for (int i=0; i<h; i++) {
-            StringBuilder s1 = new StringBuilder();
-            StringBuilder s2 = new StringBuilder();
-            StringBuilder s3 = new StringBuilder();
-            for (int j=0; j<w; j++) {
+        StringBuilder s1;
+        StringBuilder s2;
+        StringBuilder s3;
 
-                if (maze[i][j] == 1){//path
+        for (int i=0; i<this.height; i++) {
+
+            s1 = new StringBuilder();
+            s2 = new StringBuilder();
+            s3 = new StringBuilder();
+
+            for (int j=0; j<this.width; j++) {
+
+                if (maze[i].get(j) == PATH){
                     s1.append("   ");
                     s2.append("   ");
                     s3.append("   ");
                 } else {
-                    int N, E, S, W;
+                    Boolean N, E, S, W;
 
-                    N = (i==0) ? 1 : maze[i-1][j];
-                    S = (i==h-1) ? 1 : maze[i+1][j];
-                    W = (j==0) ? 1 : maze[i][j-1];
-                    E = (j==w-1) ? 1 : maze[i][j+1];
+                    N = (i==0) ? PATH : maze[i-1].get(j);
+                    S = (i==this.height-1) ? PATH : maze[i+1].get(j);
+                    W = (j==0) ? PATH : maze[i].get(j-1);
+                    E = (j==this.width-1) ? PATH : maze[i].get(j+1);
 
-                    if((N+E+S+W) == 0) {
+                    if((N && E && S && W && WALL) || (!N && !E && !S && !W && !WALL)) {
                         s1.append(" │ ");
                         s2.append("─┼─");
                         s3.append(" │ ");
-                    } else if((N+E+S) == 0) {
+                    } else if((N && E && S && WALL) || (!N && !E && !S && !WALL)) {
                         s1.append(" │ ");
                         s2.append(" ├─");
                         s3.append(" │ ");
-                    } else if((E+S+W) == 0) {
+                    } else if((E && S && W && WALL) || (!E && !S && !W && !WALL)) {
                         s1.append("   ");
                         s2.append("─┬─");
                         s3.append(" │ ");
-                    } else if((S+W+N) == 0) {
+                    } else if((S && W && N && WALL) || (!S && !W && !N && !WALL)) {
                         s1.append(" │ ");
                         s2.append("─┤ ");
                         s3.append(" │ ");
-                    } else if((W+N+E) == 0) {
+                    } else if((W && N && E && WALL) || (!W && !N && !E && !WALL)) {
                         s1.append(" │ ");
                         s2.append("─┴─");
                         s3.append("   ");
-                    } else if ((N+E) == 0) {
+                    } else if ((N && E && WALL) || (!N && !E && !WALL)) {
                         s1.append(" │ ");
                         s2.append(" └─");
                         s3.append("   ");
-                    } else if ((E+S) == 0) {
+                    } else if ((E && S && WALL) || (!E && !S && !WALL)){
                         s1.append("   ");
                         s2.append(" ┌─");
                         s3.append(" │ ");
-                    } else if ((S+W) == 0) {
+                    } else if ((S && W && WALL) || (!S && !W && !WALL)) {
                         s1.append("   ");
                         s2.append("─┐ ");
                         s3.append(" │ ");
-                    } else if ((W+N) == 0) {
+                    } else if ((W && N && WALL) || (!W && !N && !WALL)) {
                         s1.append(" │ ");
                         s2.append("─┘ ");
                         s3.append("   ");
-                    } else if ((N+S) == 0 || N==0 || S==0) {
+                    } else if ((N && S && WALL) || (!N && !S && !WALL)) {
                         s1.append(" │ ");
                         s2.append(" │ ");
                         s3.append(" │ ");
-                    } else if ((E+W) == 0 || E==0 || W==0) {
+                    } else if ((E && W && WALL) || (!E && !W && !WALL)) {
                         s1.append("   ");
                         s2.append("───");
+                        s3.append("   ");
+                    } else if (N==WALL) {
+                        s1.append(" │ ");
+                        s2.append(" │ ");
+                        s3.append("   ");
+                    } else if (E==WALL) {
+                        s1.append("   ");
+                        s2.append(" ──");
+                        s3.append("   ");
+                    } else if (S==WALL) {
+                        s1.append("   ");
+                        s2.append(" │ ");
+                        s3.append(" │ ");
+                    } else if (W==WALL) {
+                        s1.append("   ");
+                        s2.append("── ");
                         s3.append("   ");
                     } else {
                         s1.append("┌─┐");
@@ -217,116 +209,35 @@ public class Labyrinth implements Serializable {
                         s3.append("└─┘");
                     }
                 }
+
             }
             s.append(s1.toString()).append("\n");
             s.append(s2.toString()).append("\n");
             s.append(s3.toString()).append("\n");
         }
+
         return s.toString();
+
     }
 
-    public void PNG(String name) {
-        int h = maze.length;
-        int w = maze[0].length;
+    protected int randomEven (int min, int max) {
+        if (max % 2 != 0) --max;
+        if (min % 2 != 0) ++min;
+        return min + 2 * (random.nextInt((max-min)/2+1));
+    }
 
-        BufferedImage image = new BufferedImage(w,h,TYPE_INT_RGB);
+    protected int randomOdd (int min, int max) {
+        if (max % 2 == 0) --max;
+        if (min % 2 == 0) ++min;
+        return min + 2 * (random.nextInt((max-min)/2+1));
+    }
 
-        Color black = new Color(0,0,0);
-        Color white = new Color(255,255,255);
-        Color unknown = new Color(128,128,128);
-        Color visited = new Color(200,200,200);
-        Color solution = new Color(128,0,128);
-
-        for(int i=0; i<maze.length; i++) {
-            for(int j=0; j<maze[0].length; j++) {
-
-                int p = maze[i][j];
-
-                if (p == 0) {
-                    image.setRGB(j,i,black.getRGB());
-                } else if (p == 1) {
-                    image.setRGB(j,i,white.getRGB());
-                } else if (p == 2) {
-                    image.setRGB(j,i,visited.getRGB());
-                } else if (p == 3) {
-                    image.setRGB(j,i,solution.getRGB());
-                }  else {
-                    image.setRGB(j,i,unknown.getRGB());
-                }
-
+    public void randomize () {
+        for (int i=0; i<this.height; i++) {
+            for (int j = 0; j < this.width; j++) {
+                this.maze[i].set(j, this.random.nextBoolean());
             }
         }
-
-        File output = new File(name+".png");
-
-        try {
-            ImageIO.write(image, "png", output);
-        } catch(Exception e) {
-            System.out.println(e.toString());
-        }
     }
 
-    public void minPath() {
-        minPath(this.start, this.end);
-    }
-
-    private boolean minPath(Coordinates actual, Coordinates end) {
-        boolean pathToEnd = false;
-
-        int i = actual.getI();
-        int j = actual.getJ();
-
-        if (!valid(actual)) {
-            return false;
-        }
-
-        if (actual.equals(end)) {
-            maze[i][j] = 3;         //path to end
-            return true;
-        }
-
-        //actual visited
-        maze[i][j] = 2;
-
-        pathToEnd = pathToEnd || minPath(new Coordinates(i+1, j), end);  //N
-        pathToEnd = pathToEnd || minPath(new Coordinates(i, j+1), end);  //E
-        pathToEnd = pathToEnd || minPath(new Coordinates(i-1, j), end);  //S
-        pathToEnd = pathToEnd || minPath(new Coordinates(i, j-1), end);  //W
-
-        if (pathToEnd) {
-            maze[i][j] = 3;     //path to end
-        }
-
-        return pathToEnd;
-    }
-
-    private boolean valid(Coordinates c) {
-        int i = c.getI();
-        int j = c.getJ();
-
-        if (i<0 || j<0 || i>=maze.length || j>= maze[0].length || maze[i][j]!=1) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public String printMatrix() {
-        int h = maze.length;
-        int w = maze[0].length;
-
-        String s = "";
-
-        for (int i=0; i<h; i++) {
-            for (int j=0; j<w; j++) {
-                if (maze[i][j] == 0) {
-                    System.out.print("▓");
-                } else {
-                    System.out.print(" ");
-                }
-            }
-            System.out.println();
-        }
-        return s;
-    }
 }

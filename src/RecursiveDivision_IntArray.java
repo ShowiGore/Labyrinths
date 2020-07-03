@@ -1,13 +1,11 @@
-import java.util.Random;
+public class RecursiveDivision_IntArray extends Labyrinth_IntArray {
 
-public class RecursiveDivision extends Labyrinth{
-
-    RecursiveDivision(int height, int width) {
+    RecursiveDivision_IntArray(int height, int width) {
         super(height, width);
         generator();
     }
 
-    RecursiveDivision(int height, int width, Long seed) {
+    RecursiveDivision_IntArray(int height, int width, Long seed) {
         super(height, width, seed);
         generator();
     }
