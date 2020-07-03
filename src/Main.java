@@ -2,11 +2,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Labyrinth l1 = new Labyrinth(4, 20);
-        System.out.println(l1);
+        Labyrinth l1 = new Labyrinth(10000, 10000);
         l1.randomize();
-        System.out.println(l1.toString());
-        System.out.println(l1.toStringAccurate());
+
+        //System.out.println(l1.toString());
+        //System.out.println(l1.toStringAccurate());
+        //l1.exportPNG();
 
         /*
         Labyrinth_IntArray l1 = new RecursiveDivision_IntArray(80, 80);      //(3,3,-462L)

@@ -1,6 +1,12 @@
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.Serializable;
 import java.util.BitSet;
 import java.util.Random;
+
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 public class Labyrinth implements Serializable {
 
@@ -218,6 +224,38 @@ public class Labyrinth implements Serializable {
 
         return s.toString();
 
+    }
+
+    public void exportPNG() {
+        BufferedImage image = new BufferedImage(this.width,this.height,TYPE_INT_RGB);
+
+        Color black = new Color(0,0,0);
+        Color white = new Color(255,255,255);
+        Color unknown = new Color(128,128,128);
+
+        for(int i=0; i<this.height; i++) {
+            for(int j=0; j<this.width; j++) {
+
+                Boolean p = maze[i].get(j);
+
+                if (p == WALL) {
+                    image.setRGB(j,i,black.getRGB());
+                } else if (p == PATH) {
+                    image.setRGB(j,i,white.getRGB());
+                }  else {
+                    image.setRGB(j,i,unknown.getRGB());
+                }
+
+            }
+        }
+
+        File output = new File("maze_"+Long.toString(this.seed)+".png");
+
+        try {
+            ImageIO.write(image, "png", output);
+        } catch(Exception e) {
+            System.out.println(e.toString());
+        }
     }
 
     protected int randomEven (int min, int max) {
