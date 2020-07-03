@@ -11,7 +11,7 @@ public class Main {
         startTime = System.nanoTime();
 
         Labyrinth l1 = new RecursiveDivision(10000,10000);
-        l1.exportPNG();
+        //l1.exportPNG();
         //Labyrinth_IntArray l2 = new RecursiveDivision_IntArray(10000,10000);
         //l2.PNG("maze");
 
@@ -57,13 +57,13 @@ public class Main {
 
         StringJoiner sj = new StringJoiner(" | ", "[ ", " ]");
 
-        if (days>0) {sj.add("Days: "+days);}
-        if (hours>0) {sj.add("Hours: "+hours);}
-        if (minutes>0) {sj.add("Minutes: "+minutes);}
-        if (seconds>0) {sj.add("Sconds: "+seconds);}
-        if (milliseconds>0) {sj.add("Milliseconds: "+milliseconds);}
-        if (microseconds>0) {sj.add("Microseconds: "+microseconds);}
-        if (nanoseconds>0) {sj.add("Nanoseconds: "+nanoseconds);}
+        if (days>0) {sj.add(days+" d");}
+        if (hours>0) {sj.add(hours+" h");}
+        if (minutes>0) {sj.add(minutes+" min");}
+        if (seconds>0) {sj.add(seconds+" s");}
+        if (milliseconds>0) {sj.add(milliseconds+" ms");}
+        if (microseconds>0) {sj.add(microseconds+" µs");}
+        if (nanoseconds>0) {sj.add(nanoseconds+" ns");}
 
         return(sj.toString());
 
@@ -84,11 +84,11 @@ public class Main {
 
         StringJoiner sj = new StringJoiner(" | ", "[ ", " ]");
 
-        if (tebibytes>0) {sj.add(tebibytes+"TB");}
-        if (gibibytes>0) {sj.add(gibibytes+"GB");}
-        if (mebibytes>0) {sj.add(mebibytes+"MB");}
-        if (kibibytes>0) {sj.add(kibibytes+"KB");}
-        if (bytes>0) {sj.add(bytes+"B");}
+        if (tebibytes>0) {sj.add(tebibytes+" TB");}
+        if (gibibytes>0) {sj.add(gibibytes+" GB");}
+        if (mebibytes>0) {sj.add(mebibytes+" MB");}
+        if (kibibytes>0) {sj.add(kibibytes+" KB");}
+        if (bytes>0) {sj.add(bytes+" B");}
 
         return(sj.toString());
 
