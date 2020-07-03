@@ -1,22 +1,29 @@
+import java.util.StringJoiner;
+
 public class Main {
 
     public static void main(String[] args) {
 
-        Long startTime, endTime, elapsedTime;
 
+        Long startTime, endTime, elapsedTime, beforeUsedMem, afterUsedMem, actualMemUsed;
+
+        beforeUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         startTime = System.nanoTime();
 
-        //Labyrinth_IntArray l1 = new RecursiveDivision_IntArray(10000, 10000);      //(3,3,-462L)
-
-        //Labyrinth l1 = new RecursiveDivision(2000,2000);
-        //l1.exportPNG();
-        //Labyrinth_IntArray l2 = new RecursiveDivision_IntArray(2000,2000);
+        Labyrinth l1 = new RecursiveDivision(10000,10000);
+        l1.exportPNG();
+        //Labyrinth_IntArray l2 = new RecursiveDivision_IntArray(10000,10000);
         //l2.PNG("maze");
 
         endTime = System.nanoTime();
-        elapsedTime = endTime-startTime;
-        System.out.println("Time:\t\t"+showTime(elapsedTime));
+        afterUsedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
+        elapsedTime = endTime-startTime;
+        actualMemUsed = afterUsedMem - beforeUsedMem;
+
+
+        System.out.println("Time:\t\t"+showTime(elapsedTime));
+        System.out.println("Memory:\t\t"+showMemory(actualMemUsed));
 
         //System.out.println("Seed: " + l1.getSeed());
 
@@ -30,10 +37,10 @@ public class Main {
         //System.out.println(l1.toString());
         //System.out.println(l1.toString2())
 
-
     }
 
     public static String showTime(long t) {
+
         long nanoseconds = t%1000;
         t = t/1000;
         long microseconds = t%1000;
@@ -48,17 +55,43 @@ public class Main {
         t = t/24;
         long days = t;
 
-        String s = "";
+        StringJoiner sj = new StringJoiner(" | ", "[ ", " ]");
 
-        if (days>0) {s += "Days: "+days+" | ";}
-        if (hours>0) {s += "Hours: "+hours+" | ";}
-        if (minutes>0) {s += "Minutes: "+minutes+" | ";}
-        if (seconds>0) {s += "Sconds: "+seconds+" | ";}
-        if (milliseconds>0) {s += "Milliseconds: "+milliseconds+" | ";}
-        if (microseconds>0) {s += "Microseconds: "+microseconds+" | ";}
-        if (nanoseconds>0) {s += "Nanoseconds: "+nanoseconds+" | ";}
+        if (days>0) {sj.add("Days: "+days);}
+        if (hours>0) {sj.add("Hours: "+hours);}
+        if (minutes>0) {sj.add("Minutes: "+minutes);}
+        if (seconds>0) {sj.add("Sconds: "+seconds);}
+        if (milliseconds>0) {sj.add("Milliseconds: "+milliseconds);}
+        if (microseconds>0) {sj.add("Microseconds: "+microseconds);}
+        if (nanoseconds>0) {sj.add("Nanoseconds: "+nanoseconds);}
 
-        return(s);
+        return(sj.toString());
+
+    }
+
+    public static String showMemory(long m) {
+
+        long bytes = m%1024;
+        m = m/1024;
+        long kibibytes = m%1024;
+        m = m/1024;
+        long mebibytes = m%1024;
+        m = m/1024;
+        long gibibytes = m%1024;
+        m = m/1024;
+        long tebibytes = m%1024;
+        m = m/1024;
+
+        StringJoiner sj = new StringJoiner(" | ", "[ ", " ]");
+
+        if (tebibytes>0) {sj.add(tebibytes+"TB");}
+        if (gibibytes>0) {sj.add(gibibytes+"GB");}
+        if (mebibytes>0) {sj.add(mebibytes+"MB");}
+        if (kibibytes>0) {sj.add(kibibytes+"KB");}
+        if (bytes>0) {sj.add(bytes+"B");}
+
+        return(sj.toString());
+
     }
 
 }
