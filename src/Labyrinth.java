@@ -249,7 +249,7 @@ public class Labyrinth implements Serializable {
             }
         }
 
-        File output = new File("maze_"+Long.toString(this.seed)+".png");
+        File output = new File("maze_"+this.height+"x"+this.width+"_"+Long.toString(this.seed)+".png");
 
         try {
             ImageIO.write(image, "png", output);

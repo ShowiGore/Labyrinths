@@ -6,11 +6,16 @@ public class Main {
 
         startTime = System.nanoTime();
 
-        Labyrinth_IntArray l1 = new RecursiveDivision_IntArray(10000, 10000);      //(3,3,-462L)
+        //Labyrinth_IntArray l1 = new RecursiveDivision_IntArray(10000, 10000);      //(3,3,-462L)
+
+        //Labyrinth l1 = new RecursiveDivision(2000,2000);
+        //l1.exportPNG();
+        //Labyrinth_IntArray l2 = new RecursiveDivision_IntArray(2000,2000);
+        //l2.PNG("maze");
 
         endTime = System.nanoTime();
         elapsedTime = endTime-startTime;
-        System.out.println("Recursive Division:\t\t"+showTime(elapsedTime));
+        System.out.println("Time:\t\t"+showTime(elapsedTime));
 
 
         //System.out.println("Seed: " + l1.getSeed());
