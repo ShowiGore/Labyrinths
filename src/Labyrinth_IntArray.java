@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.Random;
 
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;

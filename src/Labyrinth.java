@@ -10,14 +10,16 @@ import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 public class Labyrinth implements Serializable {
 
-    final Boolean PATH = false;
-    final Boolean WALL = true;
+    public static final Boolean PATH = false;
+    public static final Boolean WALL = true;
 
     protected BitSet[] maze;
     protected int height;
     protected int width;
     protected Random random = new Random();
     protected long seed;
+    protected Pair<Integer, Integer> start;
+    protected Pair<Integer, Integer> end;
 
     Labyrinth(int height, int width) {
         this.seed = random.nextLong();
@@ -60,8 +62,11 @@ public class Labyrinth implements Serializable {
     }
 
     private void buildStartEnd() {
-        this.maze[0].set(randomOdd(0,this.height-1), PATH);  //start
-        this.maze[this.height-1].set(randomOdd(0,this.width-1), PATH);  //end
+        this.start = new Pair(0,randomOdd(0,this.width-1));
+        this.end = new Pair(this.height-1,randomOdd(0,this.width-1));
+
+        this.maze[this.start.getFirst()].set(this.start.getSecond(), PATH);
+        this.maze[this.end.getFirst()].set(this.end.getSecond(), PATH);
     }
 
     public Long getSeed() {
@@ -249,7 +254,7 @@ public class Labyrinth implements Serializable {
             }
         }
 
-        File output = new File("maze_"+this.height+"x"+this.width+"_"+Long.toString(this.seed)+".png");
+        File output = new File("maze_"+this.height+"x"+this.width+".png");
 
         try {
             ImageIO.write(image, "png", output);
