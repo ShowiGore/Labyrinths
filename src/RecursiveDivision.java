@@ -2,11 +2,18 @@ public class RecursiveDivision extends Labyrinth {
 
     RecursiveDivision(int height, int width) {
         super(height, width);
-        generator();
+        build();
     }
 
     RecursiveDivision(int height, int width, Long seed) {
         super(height, width, seed);
+        build();
+    }
+
+    private void build() {
+        buildEmpty();
+        buildBorder();
+        buildStartEnd();
         generator();
     }
 

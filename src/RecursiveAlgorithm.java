@@ -50,9 +50,9 @@ public class RecursiveAlgorithm {
         if (maze[x].get(y) == Labyrinth.WALL || visited[x].get(y)) return false; // If you are on a wall or already were here
         visited[x].set(y, true);
 
-        if (x != 0) // Checks if not on left edge
-            if (recursiveSolve(x-1, y)) { // Recalls method one to the left
-                solution[x].set(y,true); // Sets that path value to true;
+        if (y != height - 1) // Checks if not on bottom edge
+            if (recursiveSolve(x, y+1)) { // Recalls method one down
+                solution[x].set(y,true);
                 return true;
             }
         if (x != width - 1) // Checks if not on right edge
@@ -60,20 +60,20 @@ public class RecursiveAlgorithm {
                 solution[x].set(y,true);
                 return true;
             }
-        if (y != 0)  // Checks if not on top edge
-            if (recursiveSolve(x, y-1)) { // Recalls method one up
-                solution[x].set(y,true);
+        if (x != 0) // Checks if not on left edge
+            if (recursiveSolve(x-1, y)) { // Recalls method one to the left
+                solution[x].set(y,true); // Sets that path value to true;
                 return true;
             }
-        if (y != height - 1) // Checks if not on bottom edge
-            if (recursiveSolve(x, y+1)) { // Recalls method one down
+        if (y != 0)  // Checks if not on top edge
+            if (recursiveSolve(x, y-1)) { // Recalls method one up
                 solution[x].set(y,true);
                 return true;
             }
         return false;
     }
 
-    public void exportPNG() {
+    public void exportPNG(String name) {
         BufferedImage image = new BufferedImage(this.width,this.height,TYPE_INT_RGB);
 
         Color black = new Color(0,0,0);
@@ -102,13 +102,17 @@ public class RecursiveAlgorithm {
             }
         }
 
-        File output = new File("solution_"+this.height+"x"+this.width+".png");
+        File output = new File(name+".png");
 
         try {
             ImageIO.write(image, "png", output);
         } catch(Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    public void exportPNG() {
+        exportPNG("Solution");
     }
 
 }

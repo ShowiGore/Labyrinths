@@ -8,7 +8,7 @@ public class Main {
 
         int height, width;
 
-        height = width = 2; //23169 max PNG
+        height = width = 200; //23169 max PNG
         //BufferedImage image = new BufferedImage(width,height,TYPE_INT_RGB);
 
         /*Test t2 = new Test();

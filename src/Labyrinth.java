@@ -26,7 +26,6 @@ public class Labyrinth implements Serializable {
         this.random.setSeed(seed);
         this.height = height*2+1;
         this.width = width*2+1;
-        build();
     }
 
     Labyrinth(int height, int width, Long seed) {
@@ -34,23 +33,24 @@ public class Labyrinth implements Serializable {
         this.random.setSeed(seed);
         this.height = height*2+1;
         this.width = width*2+1;
-        build();
     }
 
-    protected void build() {
-        buildInterior();
-        buildBorder();
-        buildStartEnd();
-    }
-
-    protected void buildInterior() {
+    protected void buildEmpty() {
         this.maze = new BitSet[this.height];
         for (int i=0; i<this.height; i++ ) {
             this.maze[i] = new BitSet(this.width);
         }
     }
 
-    private void buildBorder() {
+    protected void buildFilled() {
+        this.maze = new BitSet[this.height];
+        for (int i=0; i<this.height; i++ ) {
+            this.maze[i] = new BitSet(this.width);
+            this.maze[i].clear();
+        }
+    }
+
+    protected void buildBorder() {
         for (int i=0; i<this.height; i++) {
             this.maze[i].set(0, WALL);
             this.maze[i].set(this.width-1, WALL);
@@ -61,7 +61,7 @@ public class Labyrinth implements Serializable {
         }
     }
 
-    private void buildStartEnd() {
+    protected void buildStartEnd() {
         this.start = new Pair(0,randomOdd(0,this.width-1));
         this.end = new Pair(this.height-1,randomOdd(0,this.width-1));
 
@@ -231,7 +231,7 @@ public class Labyrinth implements Serializable {
 
     }
 
-    public void exportPNG() {
+    public void exportPNG(String name) {
         BufferedImage image = new BufferedImage(this.width,this.height,TYPE_INT_RGB);
 
         Color black = new Color(0,0,0);
@@ -254,13 +254,17 @@ public class Labyrinth implements Serializable {
             }
         }
 
-        File output = new File("maze_"+this.height+"x"+this.width+".png");
+        File output = new File(name+".png");
 
         try {
             ImageIO.write(image, "png", output);
         } catch(Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    public void exportPNG() {
+        exportPNG("Maze");
     }
 
     protected int randomEven (int min, int max) {
@@ -273,6 +277,10 @@ public class Labyrinth implements Serializable {
         if (max % 2 == 0) --max;
         if (min % 2 == 0) ++min;
         return min + 2 * (random.nextInt((max-min)/2+1));
+    }
+
+    protected int randomInRange (int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
     }
 
     public void randomize () {
