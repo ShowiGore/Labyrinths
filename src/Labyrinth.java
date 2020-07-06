@@ -36,17 +36,24 @@ public class Labyrinth implements Serializable {
     }
 
     protected void buildEmpty() {
-        this.maze = new BitSet[this.height];
-        for (int i=0; i<this.height; i++ ) {
-            this.maze[i] = new BitSet(this.width);
+        maze = new BitSet[height];
+        for (int i=0; i<this.height; i++) {
+            this.maze[i] = new BitSet(width);
         }
     }
 
     protected void buildFilled() {
-        this.maze = new BitSet[this.height];
-        for (int i=0; i<this.height; i++ ) {
-            this.maze[i] = new BitSet(this.width);
-            this.maze[i].clear();
+        this.maze = new BitSet[height];
+
+        for (int i=0; i<height; i++) {
+            maze[i] = new BitSet(width);
+            for (int j = 0; j < width; j++) {
+                if (i % 2 != 0 && j % 2 != 0) {
+                    maze[i].set(j,PATH);
+                } else {
+                    maze[i].set(j,WALL);
+                }
+            }
         }
     }
 

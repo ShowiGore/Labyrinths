@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Pair<F, S> {
     private F first; //first member of pair
     private S second; //second member of pair
@@ -22,4 +24,13 @@ public class Pair<F, S> {
     public S getSecond() {
         return second;
     }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (getClass() != o.getClass()) return false;
+        Pair pair = (Pair) o;
+        return Objects.equals(this.getFirst(), pair.getFirst()) && Objects.equals(this.getSecond(), pair.getSecond());
+    }
+
 }
