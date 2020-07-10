@@ -7,9 +7,10 @@ public class Main {
     public static void main(String[] args) {
 
         int height, width;
-        height = width = 40; //23169 max PNG
+        height = width = 200; //23169 max PNG
         Test t1 = new Test(), t2 = new Test();
         Labyrinth l1, l2;
+
 
         t1.start();
         l1 = new GrowingTree(height,width);
@@ -18,6 +19,7 @@ public class Main {
         ra1.solve();
         ra1.exportPNG();
         t1.end();
+        System.out.println(height+"x"+width+": "+l1.getSeed());
         t1.print();
 
     }

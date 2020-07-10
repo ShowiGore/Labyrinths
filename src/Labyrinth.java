@@ -47,6 +47,15 @@ public class Labyrinth implements Serializable {
 
         for (int i=0; i<height; i++) {
             maze[i] = new BitSet(width);
+            maze[i].set(0,width, WALL);
+        }
+    }
+
+    protected void buildMidFilled() {
+        this.maze = new BitSet[height];
+
+        for (int i=0; i<height; i++) {
+            maze[i] = new BitSet(width);
             for (int j = 0; j < width; j++) {
                 if (i % 2 != 0 && j % 2 != 0) {
                     maze[i].set(j,PATH);
@@ -296,6 +305,20 @@ public class Labyrinth implements Serializable {
                 this.maze[i].set(j, this.random.nextBoolean());
             }
         }
+    }
+
+    protected boolean isPath (int i, int j) {
+        if (maze[i].get(j) == PATH) {
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean isWall (int i, int j) {
+        if (maze[i].get(j) == WALL) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -29,7 +29,6 @@ public class GrowingTree extends Labyrinth {
         cell = new Pair<>(randomOdd(1,height-2),randomOdd(1,width-2));
 
         cells.add(cell);
-        visited.add(cell);
 
         while (!cells.isEmpty()) {
 
@@ -63,27 +62,27 @@ public class GrowingTree extends Labyrinth {
                     cells.remove(cell);
                     exit = true;
                     //s += "∅";
-                } else if (direction[index]=='N' && i>1 && !visited.contains(N)) {
+                } else if (direction[index]=='N' && i>1 && isWall(N.getFirst(),N.getSecond())) {
                     cells.addLast(N);
-                    visited.add(N);
+                    maze[N.getFirst()].set(N.getSecond(), Labyrinth.PATH);
                     maze[i-1].set(j, Labyrinth.PATH);
                     exit = true;
                     //s += "↑";
-                } else if (direction[index]=='E' && j<width-2 && !visited.contains(E)) {
+                } else if (direction[index]=='E' && j<width-2 && isWall(E.getFirst(),E.getSecond())) {
                     cells.addLast(E);
-                    visited.add(E);
+                    maze[E.getFirst()].set(E.getSecond(), Labyrinth.PATH);
                     maze[i].set(j+1, Labyrinth.PATH);
                     exit = true;
                     //s += "→";
-                } else if (direction[index]=='S' && i<height-2 && !visited.contains(S)) {
+                } else if (direction[index]=='S' && i<height-2 && isWall(S.getFirst(),S.getSecond())) {
                     cells.addLast(S);
-                    visited.add(S);
+                    maze[S.getFirst()].set(S.getSecond(), Labyrinth.PATH);
                     maze[i+1].set(j, Labyrinth.PATH);
                     exit = true;
                     //s += "↓";
-                } else if (direction[index]=='W' && j>1 && !visited.contains(W)) {
+                } else if (direction[index]=='W' && j>1 && isWall(W.getFirst(),W.getSecond())) {
                     cells.addLast(W);
-                    visited.add(W);
+                    maze[W.getFirst()].set(W.getSecond(), Labyrinth.PATH);
                     maze[i].set(j-1, Labyrinth.PATH);
                     exit = true;
                     //s += "←";
@@ -92,7 +91,6 @@ public class GrowingTree extends Labyrinth {
             }
 
         }
-
 
     }
 
