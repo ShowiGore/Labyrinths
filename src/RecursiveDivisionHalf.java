@@ -1,11 +1,11 @@
-public class RecursiveDivision extends Labyrinth {
+public class RecursiveDivisionHalf extends Labyrinth {
 
-    RecursiveDivision(int height, int width) {
+    RecursiveDivisionHalf(int height, int width) {
         super(height, width);
         build();
     }
 
-    RecursiveDivision(int height, int width, Long seed) {
+    RecursiveDivisionHalf(int height, int width, Long seed) {
         super(height, width, seed);
         build();
     }
@@ -64,9 +64,17 @@ public class RecursiveDivision extends Labyrinth {
         int w = (maxW-minW)+1;
 
         if (h>3 && w>3) {
+            int row, column;
 
-            int row = randomOdd(minH+1, maxH-1);
-            int column = randomEven(minW+1, maxW-1);
+            row = (maxH-minH)/2+minH+1;
+            column = (maxW-minW)/2+minW+1;
+
+            if(row%2==0) {
+                row += 1;
+            }
+            if(column%2==1) {
+                column -= 1;
+            }
 
             buildVertical(column, minH+1, maxH-1);
             this.maze[row].set(column, PATH);
@@ -81,8 +89,17 @@ public class RecursiveDivision extends Labyrinth {
         int w = (maxW-minW)+1;
 
         if (h>3 && w>3) {
-            int row = randomEven(minH+1, maxH-1);
-            int column = randomOdd(minW+1, maxW-1);
+            int row, column;
+
+            row = (maxH-minH)/2+minH+1;
+            column = (maxW-minW)/2+minW+1;
+
+            if(row%2==1) {
+                row -= 1;
+            }
+            if(column%2==0) {
+                column += 1;
+            }
 
             buildHorizontal(row, minW+1, maxW-1);
             this.maze[row].set(column, PATH);
