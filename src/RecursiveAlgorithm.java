@@ -42,34 +42,43 @@ public class RecursiveAlgorithm {
 
     private boolean recursiveSolve(int x, int y) {
 
-        if (x == end.getFirst() && y == end.getSecond()){// If you reached the end
-            solution[x].set(y,true);
+        if (x == end.getFirst() && y == end.getSecond()) {
+            solution[x].set(y, true);
             return true;
         }
 
-        if (maze[x].get(y) == Labyrinth.WALL || visited[x].get(y)) return false; // If you are on a wall or already were here
+        if (maze[x].get(y) == Labyrinth.WALL || visited[x].get(y)) {
+            return false;
+        }
+
         visited[x].set(y, true);
 
-        if (y != height - 1) // Checks if not on bottom edge
-            if (recursiveSolve(x, y+1)) { // Recalls method one down
-                solution[x].set(y,true);
+        if (x != height-1) {//S
+            if (recursiveSolve(x + 1, y)) {
+                solution[x].set(y, true);
                 return true;
             }
-        if (x != width - 1) // Checks if not on right edge
-            if (recursiveSolve(x+1, y)) { // Recalls method one to the right
-                solution[x].set(y,true);
+        }
+        if (y != width-1) {//E
+            if (recursiveSolve(x, y + 1)) { // Recalls method one down
+                solution[x].set(y, true);
                 return true;
             }
-        if (x != 0) // Checks if not on left edge
-            if (recursiveSolve(x-1, y)) { // Recalls method one to the left
-                solution[x].set(y,true); // Sets that path value to true;
+        }
+        if (y != 0) {//W
+            if (recursiveSolve(x, y - 1)) {
+                solution[x].set(y, true);
                 return true;
             }
-        if (y != 0)  // Checks if not on top edge
-            if (recursiveSolve(x, y-1)) { // Recalls method one up
-                solution[x].set(y,true);
+        }
+        if (x != 0) {//N
+            if (recursiveSolve(x - 1, y)) {
+                solution[x].set(y, true);
                 return true;
             }
+        }
+
+
         return false;
     }
 
