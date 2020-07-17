@@ -1,10 +1,12 @@
+package Auxiliary;
+
 import java.util.StringJoiner;
 
 public class Test {
 
     Long startTime, endTime, elapsedTime, startMemory, endMemory, usedMemory;
 
-    Test() {}
+    public Test() {}
 
     public void start() {
         startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();

@@ -1,3 +1,5 @@
+package Auxiliary;
+
 import java.util.Objects;
 
 public class Pair<F, S> {
@@ -31,6 +33,10 @@ public class Pair<F, S> {
         if (getClass() != o.getClass()) return false;
         Pair pair = (Pair) o;
         return Objects.equals(this.getFirst(), pair.getFirst()) && Objects.equals(this.getSecond(), pair.getSecond());
+    }
+
+    public String toString() {
+        return "("+first+", "+second+")";
     }
 
 }

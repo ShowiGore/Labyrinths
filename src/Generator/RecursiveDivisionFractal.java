@@ -1,11 +1,13 @@
-public class RecursiveDivision extends Labyrinth {
+package Generator;
 
-    RecursiveDivision(int height, int width) {
+public class RecursiveDivisionFractal extends Labyrinth {
+
+    RecursiveDivisionFractal(int height, int width) {
         super(height, width);
         build();
     }
 
-    RecursiveDivision(int height, int width, Long seed) {
+    RecursiveDivisionFractal(int height, int width, Long seed) {
         super(height, width, seed);
         build();
     }
@@ -64,15 +66,23 @@ public class RecursiveDivision extends Labyrinth {
         int w = (maxW-minW)+1;
 
         if (h>3 && w>3) {
+            int row, column;
 
-            int row = randomOdd(minH+1, maxH-1);
-            int column = randomEven(minW+1, maxW-1);
+            row = (maxH-minH)/2+minH+1;
+            column = (maxW-minW)/2+minW+1;
+
+            if(row%2==0) {
+                row += 1;
+            }
+            if(column%2==1) {
+                column -= 1;
+            }
 
             buildVertical(column, minH+1, maxH-1);
             this.maze[row].set(column, PATH);
 
-            generator(minH, maxH, minW, column);
-            generator(minH, maxH, column, maxW);
+            horizontal(minH, maxH, minW, column);
+            horizontal(minH, maxH, column, maxW);
         }
     }
 
@@ -81,14 +91,23 @@ public class RecursiveDivision extends Labyrinth {
         int w = (maxW-minW)+1;
 
         if (h>3 && w>3) {
-            int row = randomEven(minH+1, maxH-1);
-            int column = randomOdd(minW+1, maxW-1);
+            int row, column;
+
+            row = (maxH-minH)/2+minH+1;
+            column = (maxW-minW)/2+minW+1;
+
+            if(row%2==1) {
+                row -= 1;
+            }
+            if(column%2==0) {
+                column += 1;
+            }
 
             buildHorizontal(row, minW+1, maxW-1);
             this.maze[row].set(column, PATH);
 
-            generator(minH, row, minW, maxW);
-            generator(row, maxH, minW, maxW);
+            vertical(minH, row, minW, maxW);
+            vertical(row, maxH, minW, maxW);
 
         }
 

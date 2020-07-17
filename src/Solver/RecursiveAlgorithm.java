@@ -1,8 +1,12 @@
+package Solver;
+
+import Auxiliary.Pair;
+import Generator.Labyrinth;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.lang.reflect.Parameter;
 import java.util.BitSet;
 
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
@@ -18,12 +22,12 @@ public class RecursiveAlgorithm {
     private BitSet[] visited;
     private BitSet[] solution;
 
-    RecursiveAlgorithm(Labyrinth labyrinth) {
-        this.maze = labyrinth.maze;
-        this.height = labyrinth.height;
-        this.width = labyrinth.width;
-        this.start = labyrinth.start;
-        this.end = labyrinth.end;
+    public RecursiveAlgorithm(Labyrinth labyrinth) {
+        this.maze = labyrinth.getMaze();
+        this.height = labyrinth.getHeight();
+        this.width = labyrinth.getWidth();
+        this.start = labyrinth.getStart();
+        this.end = labyrinth.getEnd();
         buildVisitedSolution();
     }
 

@@ -1,17 +1,26 @@
-public class RecursiveDivision_IntArray extends Labyrinth_IntArray {
+package Generator;
 
-    RecursiveDivision_IntArray(int height, int width) {
+public class RecursiveDivision extends Labyrinth {
+
+    public RecursiveDivision(int height, int width) {
         super(height, width);
-        generator();
+        build();
     }
 
-    RecursiveDivision_IntArray(int height, int width, Long seed) {
+    RecursiveDivision(int height, int width, Long seed) {
         super(height, width, seed);
+        build();
+    }
+
+    private void build() {
+        buildEmpty();
+        buildBorder();
+        buildStartEnd();
         generator();
     }
 
     private void generator() {
-        generator(0, maze.length-1, 0, maze[0].length-1);
+        generator(0, this.height-1, 0, this.width-1);
     }
 
     private void generator(int minH, int maxH, int minW, int maxW) {
@@ -22,7 +31,7 @@ public class RecursiveDivision_IntArray extends Labyrinth_IntArray {
         } else if (h<w) {
             vertical(minH, maxH, minW, maxW);
         } else {
-            Boolean b = r.nextBoolean();
+            Boolean b = random.nextBoolean();
             if (b) {
                 vertical(minH, maxH, minW, maxW);
             } else {
@@ -36,7 +45,7 @@ public class RecursiveDivision_IntArray extends Labyrinth_IntArray {
             System.out.println("Error at biuldVertical()");
         } else {
             for (int i=minH; i<=maxH; i++) {
-                maze[i][w] = 0;
+                this.maze[i].set(w, WALL);
             }
         }
 
@@ -47,7 +56,7 @@ public class RecursiveDivision_IntArray extends Labyrinth_IntArray {
             System.out.println("Error at biuldHorizontal()");
         } else {
             for (int j=minW; j<=maxW; j++) {
-                maze[h][j] = 0;
+                this.maze[h].set(j, WALL);
             }
         }
     }
@@ -62,7 +71,7 @@ public class RecursiveDivision_IntArray extends Labyrinth_IntArray {
             int column = randomEven(minW+1, maxW-1);
 
             buildVertical(column, minH+1, maxH-1);
-            maze[row][column] = 1;
+            this.maze[row].set(column, PATH);
 
             generator(minH, maxH, minW, column);
             generator(minH, maxH, column, maxW);
@@ -78,17 +87,13 @@ public class RecursiveDivision_IntArray extends Labyrinth_IntArray {
             int column = randomOdd(minW+1, maxW-1);
 
             buildHorizontal(row, minW+1, maxW-1);
-            maze[row][column] = 1;
+            this.maze[row].set(column, PATH);
 
             generator(minH, row, minW, maxW);
             generator(row, maxH, minW, maxW);
 
         }
 
-    }
-
-    private int randomInRange (int min, int max) {
-        return r.nextInt((max - min) + 1) + min;
     }
 
 }

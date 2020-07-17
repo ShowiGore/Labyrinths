@@ -1,3 +1,7 @@
+package Generator;
+
+import Auxiliary.Pair;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -307,18 +311,37 @@ public class Labyrinth implements Serializable {
         }
     }
 
-    protected boolean isPath (int i, int j) {
+    public boolean isPath (int i, int j) {
         if (maze[i].get(j) == PATH) {
             return true;
         }
         return false;
     }
 
-    protected boolean isWall (int i, int j) {
+    public boolean isWall (int i, int j) {
         if (maze[i].get(j) == WALL) {
             return true;
         }
         return false;
     }
 
+    public BitSet[] getMaze() {
+        return maze;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public Pair<Integer, Integer> getStart() {
+        return start;
+    }
+
+    public Pair<Integer, Integer> getEnd() {
+        return end;
+    }
 }

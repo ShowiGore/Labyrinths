@@ -1,14 +1,17 @@
+package Generator;
+
+import Auxiliary.Pair;
+
 import java.util.LinkedList;
-import java.util.List;
 
 public class GrowingTree extends Labyrinth {
 
-    GrowingTree (int height, int width) {
+    public GrowingTree(int height, int width) {
         super(height, width);
         build();
     }
 
-    GrowingTree (int height, int width, Long seed) {
+    public GrowingTree(int height, int width, Long seed) {
         super(height, width, seed);
         build();
     }
