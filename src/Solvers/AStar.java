@@ -24,48 +24,49 @@ public class AStar extends Solver {
 
     public boolean solve() {
 
+        Tile currentTile;
+        Pair<Integer,Integer> current, next;
+        int h,w;
+
         parent.put(start, null);
         g.put(start,0);
 
-        openSet.add(new Tile(start, 0, heuristic(start)));
+        openSet.add(new Tile(start, heuristic(start)));
 
         while (!openSet.isEmpty()) {
 
-            Tile currentTile = openSet.poll();
+            currentTile = openSet.poll();
+            current = currentTile.getCoordinates();
 
-            if (isEnd(currentTile.getCoordinates())) {
+            if (isEnd(current)) {
                 buildSolution();
+                System.out.println("\nSolution length: "+(g.get(current)+1));
                 return true;
             }
 
-            int h=currentTile.getCoordinates().getFirst(),
-            w=currentTile.getCoordinates().getSecond(),
-            sd=currentTile.getStartDistance();
+            h = current.getFirst();
+            w = current.getSecond();
 
             visited[h].set(w, true);
 
             if (h < height-1 && maze[h+1].get(w)==PATH) {//S
-                Pair<Integer, Integer> coordinates = new Pair(h+1,w);
-
-                addToOpenSet(currentTile, sd, coordinates);
+                next = new Pair(h+1,w);
+                addToOpenSet(current, next);
             }
 
             if (w < width-1 && maze[h].get(w+1)==PATH && !visited[h].get(w+1)) {//E
-                Pair<Integer, Integer> coordinates = new Pair(h,w+1);
-
-                addToOpenSet(currentTile, sd, coordinates);
+                next = new Pair(h,w+1);
+                addToOpenSet(current, next);
             }
 
             if (w > 0 && maze[h].get(w-1)==PATH && !visited[h].get(w-1)) {//W
-                Pair<Integer, Integer> coordinates = new Pair(h,w-1);
-
-                addToOpenSet(currentTile, sd, coordinates);
+                next = new Pair(h,w-1);
+                addToOpenSet(current, next);
             }
 
             if (h > 0 && maze[h-1].get(w)==PATH && !visited[h-1].get(w)) {//N
-                Pair<Integer, Integer> coordinates = new Pair(h-1,w);
-
-                addToOpenSet(currentTile, sd, coordinates);
+                next = new Pair(h-1,w);
+                addToOpenSet(current, next);
             }
 
         }
@@ -74,11 +75,11 @@ public class AStar extends Solver {
 
     }
 
-    private void addToOpenSet(Tile currentTile, int sd, Pair<Integer, Integer> coordinates) {
-        if (g.get(currentTile.getCoordinates())+1 < g.getOrDefault(coordinates, Integer.MAX_VALUE)) {// better path
-            parent.put(coordinates, currentTile.getCoordinates());
-            g.put(coordinates, g.get(currentTile.getCoordinates())+1);
-            Tile t = new Tile(coordinates, sd+1, heuristic(coordinates));
+    private void addToOpenSet(Pair<Integer, Integer> current, Pair<Integer, Integer> next) {
+        if (g.get(current)+1 < g.getOrDefault(next, Integer.MAX_VALUE)) {// better path
+            parent.put(next, current);
+            g.put(next, g.get(current)+1);
+            Tile t = new Tile(next, g.get(current)+1+heuristic(next));
             if (!openSet.contains(t)) {
                 openSet.add(t);
             }
@@ -95,8 +96,8 @@ public class AStar extends Solver {
         
     }
 
-    private int heuristic (Pair<Integer, Integer> coordinates) {
-        return 2*Math.abs(end.getFirst()-coordinates.getFirst()) + Math.abs(end.getSecond()-coordinates.getSecond()); //Manhattan distance
+    private Double heuristic (Pair<Integer, Integer> coordinates) {
+        return Double.valueOf(Math.abs(end.getFirst()-coordinates.getFirst()) + Math.abs(end.getSecond()-coordinates.getSecond())); //Manhattan distance
     }
 
     private boolean isEnd(Pair<Integer, Integer> coordinates) {

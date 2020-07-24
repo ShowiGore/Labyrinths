@@ -2,19 +2,18 @@ package Auxiliary;
 
 import java.util.Objects;
 
-public class Tile implements Comparable{
+public class Tile implements Comparable<Tile> {
 
     private Pair<Integer, Integer> coordinates;
-    private int startDistance;
-    private int heuristicDistance;
+    private Double f;
 
     public Tile(Pair<Integer, Integer> coordinates) {
         this.coordinates = coordinates;
     }
 
-    public Tile(Pair<Integer, Integer> coordinates, int startDistance, int heuristicDistance) {
+    public Tile(Pair<Integer, Integer> coordinates, Double f) {
         this.coordinates = coordinates;
-        this.heuristicDistance = heuristicDistance;
+        this.f = f;
     }
 
     public Pair<Integer, Integer> getCoordinates() {
@@ -25,20 +24,12 @@ public class Tile implements Comparable{
         this.coordinates = coordinates;
     }
 
-    public int getStartDistance() {
-        return startDistance;
+    public Double getf() {
+        return f;
     }
 
-    public void setStartDistance(int startDistance) {
-        this.startDistance = startDistance;
-    }
-
-    public int getHeuristicDistance() {
-        return heuristicDistance;
-    }
-
-    public void setHeuristicDistance(int heuristicDistance) {
-        this.heuristicDistance = heuristicDistance;
+    public void setf(Double f) {
+        this.f = f;
     }
 
     @Override
@@ -56,13 +47,11 @@ public class Tile implements Comparable{
 
     @Override
     public String toString() {
-        return coordinates.toString()+", "+startDistance+" / "+heuristicDistance;
+        return coordinates.toString()+", "+f;
     }
 
     @Override
-    public int compareTo(Object o) {
-        Tile t = null;
-        t = (Tile) o;
-        return (startDistance+heuristicDistance) - (t.getStartDistance()+t.getHeuristicDistance());
+    public int compareTo(Tile o) {
+        return f.compareTo(o.f);
     }
 }

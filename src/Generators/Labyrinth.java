@@ -30,6 +30,7 @@ public class Labyrinth implements Serializable {
         this.random.setSeed(seed);
         this.height = height*2+1;
         this.width = width*2+1;
+        System.out.println("\n"+height+"x"+width+": "+getSeed());
     }
 
     Labyrinth(int height, int width, Long seed) {
@@ -37,6 +38,7 @@ public class Labyrinth implements Serializable {
         this.random.setSeed(seed);
         this.height = height*2+1;
         this.width = width*2+1;
+        System.out.println("\n"+height+"x"+width+": "+getSeed());
     }
 
     protected void buildEmpty() {
