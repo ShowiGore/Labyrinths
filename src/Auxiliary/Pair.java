@@ -2,7 +2,7 @@ package Auxiliary;
 
 import java.util.Objects;
 
-public class Pair<F, S> {
+public class Pair<F extends Comparable<F>, S extends Comparable<S>> implements Comparable<Pair<F, S>> {
     private F first; //first member of pair
     private S second; //second member of pair
 
@@ -39,4 +39,12 @@ public class Pair<F, S> {
         return "("+first+", "+second+")";
     }
 
+    @Override
+    public int compareTo(Pair<F, S> o) {
+        if (first.compareTo(o.first) == 0) {
+            return second.compareTo(o.second);
+        } else {
+            return first.compareTo(o.first);
+        }
+    }
 }

@@ -1,8 +1,8 @@
-package Generator;
+package Generators;
 
 public class RecursiveDivisionHalf extends Labyrinth {
 
-    RecursiveDivisionHalf(int height, int width) {
+    public RecursiveDivisionHalf(int height, int width) {
         super(height, width);
         build();
     }

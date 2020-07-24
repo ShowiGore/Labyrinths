@@ -1,4 +1,4 @@
-package Generator;
+package Generators;
 
 public class RecursiveDivision extends Labyrinth {
 

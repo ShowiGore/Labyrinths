@@ -1,4 +1,4 @@
-package Generator;
+package Generators;
 
 import java.util.Set;
 import java.util.TreeSet;

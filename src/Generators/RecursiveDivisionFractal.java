@@ -1,8 +1,8 @@
-package Generator;
+package Generators;
 
 public class RecursiveDivisionFractal extends Labyrinth {
 
-    RecursiveDivisionFractal(int height, int width) {
+    public RecursiveDivisionFractal(int height, int width) {
         super(height, width);
         build();
     }

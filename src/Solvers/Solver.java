@@ -1,7 +1,7 @@
-package Solver;
+package Solvers;
 
 import Auxiliary.Pair;
-import Generator.Labyrinth;
+import Generators.Labyrinth;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -9,29 +9,27 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.BitSet;
 
+import static Generators.Labyrinth.PATH;
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
-public class RecursiveAlgorithm {
+public class Solver {
 
-    private BitSet[] maze;
-    private int height;
-    private int width;
-    private Pair<Integer, Integer> start;
-    private Pair<Integer, Integer> end;
+    protected BitSet[] maze;
+    protected int height;
+    protected int width;
+    protected Pair<Integer, Integer> start;
+    protected Pair<Integer, Integer> end;
 
-    private BitSet[] visited;
-    private BitSet[] solution;
+    protected BitSet[] visited;
+    protected BitSet[] solution;
 
-    public RecursiveAlgorithm(Labyrinth labyrinth) {
+    public Solver(Labyrinth labyrinth) {
         this.maze = labyrinth.getMaze();
         this.height = labyrinth.getHeight();
         this.width = labyrinth.getWidth();
         this.start = labyrinth.getStart();
         this.end = labyrinth.getEnd();
-        buildVisitedSolution();
-    }
 
-    private void buildVisitedSolution() {
         visited = new BitSet[height];
         solution = new BitSet[height];
         for (int i=0; i<height; i++ ) {
@@ -40,49 +38,7 @@ public class RecursiveAlgorithm {
         }
     }
 
-    public void solve() {
-        boolean b = recursiveSolve(start.getFirst(), start.getSecond());
-    }
-
-    private boolean recursiveSolve(int x, int y) {
-
-        if (x == end.getFirst() && y == end.getSecond()) {
-            solution[x].set(y, true);
-            return true;
-        }
-
-        if (maze[x].get(y) == Labyrinth.WALL || visited[x].get(y)) {
-            return false;
-        }
-
-        visited[x].set(y, true);
-
-        if (x != height-1) {//S
-            if (recursiveSolve(x + 1, y)) {
-                solution[x].set(y, true);
-                return true;
-            }
-        }
-        if (y != width-1) {//E
-            if (recursiveSolve(x, y + 1)) { // Recalls method one down
-                solution[x].set(y, true);
-                return true;
-            }
-        }
-        if (y != 0) {//W
-            if (recursiveSolve(x, y - 1)) {
-                solution[x].set(y, true);
-                return true;
-            }
-        }
-        if (x != 0) {//N
-            if (recursiveSolve(x - 1, y)) {
-                solution[x].set(y, true);
-                return true;
-            }
-        }
-
-
+    public boolean solve() {
         return false;
     }
 
@@ -106,7 +62,7 @@ public class RecursiveAlgorithm {
                     image.setRGB(j,i,green.getRGB());
                 } else if (v) {
                     image.setRGB(j,i,red.getRGB());
-                } else if (m == Labyrinth.PATH) {
+                } else if (m == PATH) {
                     image.setRGB(j, i, white.getRGB());
                 }  else {
                     image.setRGB(j,i,unknown.getRGB());

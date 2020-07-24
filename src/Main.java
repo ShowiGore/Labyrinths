@@ -1,15 +1,13 @@
-import Auxiliary.Test;
-import Generator.GrowingTree;
-import Generator.Labyrinth;
-import Generator.RecursiveDivision;
-import Solver.AStarMod;
+import Auxiliary.*;
+import Generators.*;
+import Solvers.*;
 
 public class Main {
 
     public static void main(String[] args) {//23169 max PNG
 
         int height, width;
-        height = width = 1000;
+        height = width = 800;
         //height = 60;
         //width = 60;
         Test t1 = new Test(), t2 = new Test();
@@ -17,9 +15,9 @@ public class Main {
 
 
         t1.start();
-        l1 = new GrowingTree(height,width);
+        l1 = new RecursiveDivision(height,width);
         l1.exportPNG();
-        AStarMod ra1 = new AStarMod(l1);
+        Solver ra1 = new Recursive(l1);
         ra1.solve();
         ra1.exportPNG();
         t1.end();

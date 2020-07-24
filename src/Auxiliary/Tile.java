@@ -8,17 +8,13 @@ public class Tile implements Comparable{
     private int startDistance;
     private int heuristicDistance;
 
-    private Pair<Integer, Integer> parent;
-
     public Tile(Pair<Integer, Integer> coordinates) {
         this.coordinates = coordinates;
     }
 
-    public Tile(Pair<Integer, Integer> coordinates, int startDistance, int heuristicDistance, Pair<Integer,Integer> parent) {
+    public Tile(Pair<Integer, Integer> coordinates, int startDistance, int heuristicDistance) {
         this.coordinates = coordinates;
-        this.startDistance = startDistance;
         this.heuristicDistance = heuristicDistance;
-        this.parent = parent;
     }
 
     public Pair<Integer, Integer> getCoordinates() {
@@ -45,14 +41,6 @@ public class Tile implements Comparable{
         this.heuristicDistance = heuristicDistance;
     }
 
-    public Pair<Integer,Integer> getParent() {
-        return parent;
-    }
-
-    public void setParent(Pair<Integer,Integer> parent) {
-        this.parent = parent;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,7 +56,7 @@ public class Tile implements Comparable{
 
     @Override
     public String toString() {
-        return coordinates.toString()+", "+startDistance+" / "+heuristicDistance+", "+parent;
+        return coordinates.toString()+", "+startDistance+" / "+heuristicDistance;
     }
 
     @Override
