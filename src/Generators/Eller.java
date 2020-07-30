@@ -6,7 +6,7 @@ import java.util.TreeSet;
 public class Eller extends Labyrinth {
 
 
-    Eller(int height, int width) {
+    public Eller(int height, int width) {
         super(height, width);
         build();
     }
@@ -17,119 +17,81 @@ public class Eller extends Labyrinth {
     }
 
     private void build() {
-        buildEmpty();
+        buildMidFilled();
         buildBorder();
         buildStartEnd();
         generator();
     }
 
+
+
+    private void generator2() {
+        int yl = (height-1)/2-1;
+        int xl = (width-1)/2-1;
+        for (int y = 0; y < yl; y++) {
+            for (int x = 0; x < xl; x++) {
+                maze[y*2+1].set(x*2+1,WALL);
+            }
+        }
+    }
+
     private void generator() {
-        int w = (width-1)/2;
-        Set<Integer> used = new TreeSet<>();
 
-        System.out.println("w: "+w);
+        /*
+         * Circular doubly linked lists are used to store sets of connected maze
+         * nodes and these arrays store the left/right links of those lists.
+         */
+        int[] l = new int[width];
+        int[] r = new int[width];
 
-        int[] currentRow = new int[w];
-        int[] nextRow = new int[w];
-
-        for (int i=0; i<w; i++) {   //1
-            currentRow[i] = i;
+        /* Each node in the first row starts out in its own set. */
+        for (int x = 0; x < width; ++x) {
+            l[x] = r[x] = x;
         }
 
-        for (int row=1; row<width-2; row+=2){
-            String s = "";
+        int yl = (height-1)/2 - 1;
+        int xl = (width-1)/2 - 1;
 
-            System.out.println("Row: "+row);
-            s="";
-            for (int i=0; i<w; i++) {   //1
-                s = s+" "+Integer.toString(currentRow[i]);
-            }
-            System.out.println("2: "+s);
+        for (int y = 0; y < yl; ++y) {
+            for (int x = 0; x < xl; ++x) {
+                /* Creates horizontal passages. */
+                if (r[x] != x + 1 && random.nextBoolean()) {
+                    /* Unions the sets by performing a list splice. */
+                    l[r[x]] = l[x + 1];
+                    r[l[x + 1]] = r[x];
+                    l[x + 1] = x;
+                    r[x] = x + 1;
 
-            for (int i=0; i<w; i++) {       //2 Join any cells not members of a set to their own unique set
-                if (currentRow[i] == -1) {
-                    int j = 0;
-                    while (used.contains(j)) {
-                        j++;
-                    }
-                    currentRow[i] = j;
-                    used.add(j);
+                    maze[y*2+1].set(x*2+2,PATH);
                 }
-            }
-
-            used.clear();
-
-            s="";
-            for (int i=0; i<w; i++) {
-                s = s+" "+Integer.toString(currentRow[i]);
-            }
-            System.out.println("3:"+s);
-
-            for (int i=0; i<w-1; i++) {   //3  lateral walls
-                if (currentRow[i]==currentRow[i+1]) {   //same set, build wall
-                    maze[row].set(i*2+2,Labyrinth.WALL);
-                    System.out.println("right wall");
+                /* Creates vertical passages. */
+                if (r[x] != x && random.nextBoolean()) {
+                    /* Removes node from list so it has its own set. */
+                    l[r[x]] = l[x];
+                    r[l[x]] = r[x];
+                    l[x] = r[x] = x;
                 } else {
-                    if (random.nextBoolean()) { //join sets
-                        currentRow[i+1] = currentRow[i];
-                        System.out.println("join sets");
-                    } else {    //build wall
-                        maze[row].set(i*2+2,Labyrinth.WALL);
-                        System.out.println("right wall");
-                    }
+                    maze[y*2+2].set(x*2+1,PATH);
                 }
             }
-
-            s="";
-            for (int i=0; i<w; i++) {   //1
-                s = s+" "+Integer.toString(currentRow[i]);
+            /* Creates vertical passages for the last column. */
+            if (r[xl] != xl && random.nextBoolean()) {
+                l[r[xl]] = l[xl];
+                r[l[xl]] = r[xl];
+                l[xl] = r[xl] = xl;
+            } else {
+                maze[y*2+2].set(xl*2+1,PATH);
             }
-            System.out.println("4:"+s);
-
-            boolean safe = false;
-            for (int i=0; i<w; i++) {   //4 bottom walls
-                maze[row+1].set(i*2,Labyrinth.WALL);
-
-                if (i!=w-1 && currentRow[i]!=currentRow[i+1]) {   //last of set and not last cell
-                    if (!safe){
-                        maze[row+1].set(i*2+1,Labyrinth.PATH);
-                        nextRow[i] = currentRow[i];
-                        used.add(currentRow[i]);
-                    }
-                    safe = false;
-                } else if (i==w-1) { // last of set
-                    if (!safe){
-                        maze[row+1].set(i*2+1,Labyrinth.PATH);
-                        nextRow[i] = currentRow[i];
-                        used.add(currentRow[i]);
-                    }
-                    safe = false;
-                } else {
-                    if (random.nextBoolean()) {  //add wall
-                        maze[row+1].set(i*2+1,Labyrinth.WALL);
-                        nextRow[i] = -1;//2
-                    } else {
-                        safe = true;
-                        nextRow[i] = currentRow[i];//2
-                        used.add(currentRow[i]);
-                    }
-                }
-            }
-
-            s="";
-            for (int i=0; i<w; i++) {   //1
-                s = s+" "+Integer.toString(currentRow[i]);
-            }
-            System.out.println("5:"+s);
-
-            currentRow = nextRow;//5 new row
-
         }
 
-        for (int i=1; i<w; i++) {   //3  lateral walls
-                maze[width-2] = maze[width-4];
-            if (currentRow[i]!=currentRow[i-1]) {   //different sets remove wall
-                maze[width-2].set(i*2,Labyrinth.PATH);
+        /* Creates the last row. */
+        for (int x = 0; x < xl; ++x) {
+            if (r[x] != x + 1) {
+                l[r[x]] = l[x + 1];
+                r[l[x + 1]] = r[x];
+                l[x + 1] = x;
+                r[x] = x + 1;
+                maze[yl*2+1].set(x*2+2,PATH);
             }
         }
 
