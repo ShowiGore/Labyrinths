@@ -5,7 +5,6 @@ import java.util.TreeSet;
 
 public class Eller extends Labyrinth {
 
-
     public Eller(int height, int width) {
         super(height, width);
         build();
