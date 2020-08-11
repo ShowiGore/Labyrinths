@@ -53,6 +53,7 @@ public class EllerInfinite extends Labyrinth{
         int xl = (width-1)/2 - 1;
 
         try {
+
             while (System.in.available() == 0) {
 
                 for (int x = 0; x < xl; ++x) {
@@ -92,6 +93,7 @@ public class EllerInfinite extends Labyrinth{
                 bottom = (BitSet) wallMask.clone();
 
             }
+
         } catch (IOException e) {
             System.out.print(e);
         }

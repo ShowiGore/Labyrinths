@@ -10,7 +10,7 @@ public class Eller extends Labyrinth {
         build();
     }
 
-    Eller(int height, int width, Long seed) {
+    public Eller(int height, int width, Long seed) {
         super(height, width, seed);
         build();
     }
@@ -20,18 +20,6 @@ public class Eller extends Labyrinth {
         buildBorder();
         buildStartEnd();
         generator();
-    }
-
-
-
-    private void generator2() {
-        int yl = (height-1)/2-1;
-        int xl = (width-1)/2-1;
-        for (int y = 0; y < yl; y++) {
-            for (int x = 0; x < xl; x++) {
-                maze[y*2+1].set(x*2+1,WALL);
-            }
-        }
     }
 
     private void generator() {
