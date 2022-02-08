@@ -30,8 +30,8 @@ public class Test {
     }
 
     public void print() {
-        System.out.println("\nTime:\n"+showTime(elapsedTime));
-        System.out.println("\nMemory:\n"+showMemory(usedMemory));
+        System.out.println("Time:\t"+showTime(elapsedTime));
+        System.out.println("Memory:\t"+showMemory(usedMemory));
     }
 
     public static String showTime(long t) {

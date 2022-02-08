@@ -1,10 +1,10 @@
-import Auxiliary.*;
-import Generators.*;
-import Solvers.*;
+import Auxiliary.Image;
+import Auxiliary.Test;
+import Generators.Eller;
+import Generators.Labyrinth;
+import Solvers.Recursive;
+import Solvers.Solver;
 
-import ar.com.hjg.pngj.*;
-import ar.com.hjg.pngj.chunks.PngChunkPLTE;
-import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Main {
@@ -15,7 +15,7 @@ public class Main {
 
         Image i = new Image();
         int height, width;
-        height = width = 90620;//90620
+        height = width = 750;//90620
         //height = 10000;
         //width = 200;
         Test t1 = new Test();
@@ -31,8 +31,6 @@ public class Main {
         t1.end();//
         t1.print();
 
-        i.mazeToPNG(l1);
-
         s1 = new Recursive(l1);
 
         t1.start();//
@@ -42,9 +40,9 @@ public class Main {
         t1.end();//
         t1.print();
 
-        i.solutionToPNG(s1);
 
-
+        //i.mazeToPNG(l1);
+        //i.solutionToPNG(s1);
     }
 
 }
