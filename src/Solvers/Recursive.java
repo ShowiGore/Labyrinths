@@ -1,15 +1,6 @@
 package Solvers;
 
-import Auxiliary.Pair;
 import Generators.Labyrinth;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.BitSet;
-
-import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 
 public class Recursive extends Solver{
 

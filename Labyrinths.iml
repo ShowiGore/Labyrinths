@@ -7,20 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/pngj-2.1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$USER_HOME$/Downloads/pngj-2.1.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$USER_HOME$/Downloads/pngj-2.1.1-sources.jar!/" />
-          <root url="jar://$USER_HOME$/Downloads/pngj-2.1.1-test-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="alexdupre.pngj" level="project" />
+    <orderEntry type="library" name="slf4j.log4j12" level="project" />
   </component>
 </module>
